@@ -1,0 +1,394 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
+import Link from "next/link";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { ticketService } from "@/services/ticketService";
+import { useToast } from "@/hooks/useToast";
+import {
+  ArrowLeft,
+  CheckCircle,
+  Clock,
+  MessageSquare,
+  Send,
+  User,
+  Calendar,
+  Tag,
+  AlertCircle,
+} from "lucide-react";
+
+export default function TicketDetailPage() {
+  const router = useRouter();
+  const params = useParams();
+  const { toast } = useToast();
+  const ticketId = params.id as string;
+
+  const [ticket, setTicket] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [comment, setComment] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [resolving, setResolving] = useState(false);
+
+  useEffect(() => {
+    if (ticketId) {
+      loadTicket();
+    }
+  }, [ticketId]);
+
+  const loadTicket = async () => {
+    try {
+      setLoading(true);
+      const response = await ticketService.getTicket(ticketId);
+      setTicket(response.data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load ticket details",
+        variant: "destructive",
+      });
+      router.push("/employee/tickets");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddComment = async () => {
+    if (!comment.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a comment",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      await ticketService.addComment(ticketId, comment);
+      toast({
+        title: "Success",
+        description: "Comment added successfully",
+      });
+      setComment("");
+      loadTicket();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add comment",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleMarkResolved = async () => {
+    try {
+      setResolving(true);
+      await ticketService.markAsResolved(ticketId);
+      toast({
+        title: "Success",
+        description: "Ticket marked as resolved",
+      });
+      loadTicket();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to mark ticket as resolved",
+        variant: "destructive",
+      });
+    } finally {
+      setResolving(false);
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    const colors: any = {
+      Open: "text-blue-600 bg-blue-50 border-blue-200",
+      "In Progress": "text-orange-600 bg-orange-50 border-orange-200",
+      Resolved: "text-green-600 bg-green-50 border-green-200",
+      Closed: "text-gray-600 bg-gray-50 border-gray-200",
+      Rejected: "text-red-600 bg-red-50 border-red-200",
+    };
+    return colors[status] || "text-gray-600 bg-gray-50 border-gray-200";
+  };
+
+  const getPriorityColor = (priority: string) => {
+    const colors: any = {
+      Low: "text-gray-600 bg-gray-100 border-gray-300",
+      Medium: "text-blue-600 bg-blue-100 border-blue-300",
+      High: "text-orange-600 bg-orange-100 border-orange-300",
+      Critical: "text-red-600 bg-red-100 border-red-300",
+    };
+    return colors[priority] || "text-gray-600 bg-gray-100 border-gray-300";
+  };
+
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-96">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (!ticket) {
+    return (
+      <DashboardLayout>
+        <div className="text-center py-12">
+          <p className="text-gray-600">Ticket not found</p>
+          <Link href="/employee/tickets">
+            <Button className="mt-4">Back to Tickets</Button>
+          </Link>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  const canMarkResolved =
+    ticket.status === "In Progress" || ticket.status === "Resolved";
+
+  return (
+    <DashboardLayout>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/employee/tickets">
+              <Button variant="outline" size="sm">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </Button>
+            </Link>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                {ticket.ticketId}
+              </h1>
+              <p className="text-gray-600 mt-1">Ticket Details</p>
+            </div>
+          </div>
+
+          {canMarkResolved && ticket.status !== "Closed" && (
+            <Button
+              onClick={handleMarkResolved}
+              disabled={resolving || ticket.status === "Resolved"}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              <CheckCircle className="h-4 w-4 mr-2" />
+              {ticket.status === "Resolved"
+                ? "Already Resolved"
+                : "Mark as Resolved"}
+            </Button>
+          )}
+        </div>
+
+        {/* Ticket Info */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Details */}
+          <div className="lg:col-span-2 space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-xl">
+                      {ticket.type} - {ticket.subcategory}
+                    </CardTitle>
+                    <CardDescription className="mt-2">
+                      Created on {new Date(ticket.createdAt).toLocaleString()}
+                    </CardDescription>
+                  </div>
+                  <div className="flex gap-2">
+                    <span
+                      className={`px-3 py-1 text-sm font-medium border ${getStatusColor(
+                        ticket.status
+                      )}`}
+                    >
+                      {ticket.status}
+                    </span>
+                    <span
+                      className={`px-3 py-1 text-sm font-medium border ${getPriorityColor(
+                        ticket.priority
+                      )}`}
+                    >
+                      {ticket.priority}
+                    </span>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    Description
+                  </h3>
+                  <p className="text-gray-700 whitespace-pre-wrap">
+                    {ticket.description}
+                  </p>
+                </div>
+
+                {ticket.comments && ticket.comments.length > 0 && (
+                  <div className="border-t pt-4">
+                    <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                      <MessageSquare className="h-5 w-5" />
+                      Comments ({ticket.comments.length})
+                    </h3>
+                    <div className="space-y-3">
+                      {ticket.comments.map((comment: any, index: number) => (
+                        <div
+                          key={index}
+                          className="bg-gray-50 p-4 border border-gray-200"
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="w-8 h-8 bg-blue-100 flex items-center justify-center">
+                              <User className="h-4 w-4 text-blue-600" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="font-semibold text-gray-900">
+                                  {comment.user?.name || "Unknown"}
+                                </span>
+                                <span className="text-xs text-gray-500">
+                                  {new Date(comment.createdAt).toLocaleString()}
+                                </span>
+                              </div>
+                              <p className="text-gray-700 whitespace-pre-wrap">
+                                {comment.comment}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Add Comment */}
+            {ticket.status !== "Closed" && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Add Comment</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Textarea
+                    placeholder="Type your comment here..."
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    rows={4}
+                    className="resize-none"
+                  />
+                  <Button
+                    onClick={handleAddComment}
+                    disabled={submitting || !comment.trim()}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Send className="h-4 w-4 mr-2" />
+                    {submitting ? "Sending..." : "Send Comment"}
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Status Info */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Status Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <AlertCircle className="h-5 w-5 text-gray-400" />
+                  <div>
+                    <p className="text-sm text-gray-600">Current Status</p>
+                    <p className="font-semibold text-gray-900">
+                      {ticket.status}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Tag className="h-5 w-5 text-gray-400" />
+                  <div>
+                    <p className="text-sm text-gray-600">Priority</p>
+                    <p className="font-semibold text-gray-900">
+                      {ticket.priority}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Calendar className="h-5 w-5 text-gray-400" />
+                  <div>
+                    <p className="text-sm text-gray-600">Created</p>
+                    <p className="font-semibold text-gray-900">
+                      {new Date(ticket.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Clock className="h-5 w-5 text-gray-400" />
+                  <div>
+                    <p className="text-sm text-gray-600">Last Updated</p>
+                    <p className="font-semibold text-gray-900">
+                      {new Date(ticket.updatedAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Assignment */}
+            {ticket.assignedTo && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Assigned To</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-blue-100 flex items-center justify-center">
+                      <User className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">
+                        {ticket.assignedTo.name}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {ticket.assignedTo.email}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Help Text */}
+            <Card className="bg-blue-50 border-blue-200">
+              <CardContent className="pt-6">
+                <p className="text-sm text-blue-900">
+                  <strong>Need help?</strong>
+                  <br />
+                  Add comments to communicate with the assigned agent. They will
+                  be notified of your updates.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </DashboardLayout>
+  );
+}

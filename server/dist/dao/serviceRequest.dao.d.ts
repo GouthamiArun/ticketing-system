@@ -1,0 +1,90 @@
+import { IServiceRequest } from '../models/ServiceRequest.model';
+import { FilterQuery } from 'mongoose';
+export declare const findByRequestId: (requestId: string) => Promise<IServiceRequest | null>;
+export declare const findByUser: (userId: string, options?: any) => Promise<IServiceRequest[]>;
+export declare const findByAssignedAgent: (agentId: string, options?: any) => Promise<IServiceRequest[]>;
+export declare const findWithFilters: (filters: {
+    status?: string | string[];
+    priority?: string | string[];
+    type?: string;
+    serviceType?: string;
+    category?: string;
+    createdBy?: string;
+    assignedTo?: string;
+    dateFrom?: Date;
+    dateTo?: Date;
+    $or?: any[];
+}, options?: any) => Promise<IServiceRequest[]>;
+export declare const addComment: (requestId: string, comment: {
+    user: string;
+    userName: string;
+    text: string;
+}) => Promise<IServiceRequest | null>;
+export declare const assignAgent: (requestId: string, agentId: string) => Promise<IServiceRequest | null>;
+export declare const updateStatus: (requestId: string, status: string) => Promise<IServiceRequest | null>;
+export declare const getStatsByStatus: () => Promise<any[]>;
+export declare const countByUser: (userId: string, filters?: any) => Promise<number>;
+export declare const countByAssignedAgent: (agentId: string, filters?: any) => Promise<number>;
+export declare const countWithFilters: (filters: {
+    status?: string | string[];
+    priority?: string | string[];
+    type?: string;
+    serviceType?: string;
+    category?: string;
+    createdBy?: string;
+    assignedTo?: string;
+    dateFrom?: Date;
+    dateTo?: Date;
+    $or?: any[];
+}) => Promise<number>;
+export declare const serviceRequestDAO: {
+    findByRequestId: (requestId: string) => Promise<IServiceRequest | null>;
+    findByUser: (userId: string, options?: any) => Promise<IServiceRequest[]>;
+    findByAssignedAgent: (agentId: string, options?: any) => Promise<IServiceRequest[]>;
+    findWithFilters: (filters: {
+        status?: string | string[];
+        priority?: string | string[];
+        type?: string;
+        serviceType?: string;
+        category?: string;
+        createdBy?: string;
+        assignedTo?: string;
+        dateFrom?: Date;
+        dateTo?: Date;
+        $or?: any[];
+    }, options?: any) => Promise<IServiceRequest[]>;
+    addComment: (requestId: string, comment: {
+        user: string;
+        userName: string;
+        text: string;
+    }) => Promise<IServiceRequest | null>;
+    assignAgent: (requestId: string, agentId: string) => Promise<IServiceRequest | null>;
+    updateStatus: (requestId: string, status: string) => Promise<IServiceRequest | null>;
+    getStatsByStatus: () => Promise<any[]>;
+    countByUser: (userId: string, filters?: any) => Promise<number>;
+    countByAssignedAgent: (agentId: string, filters?: any) => Promise<number>;
+    countWithFilters: (filters: {
+        status?: string | string[];
+        priority?: string | string[];
+        type?: string;
+        serviceType?: string;
+        category?: string;
+        createdBy?: string;
+        assignedTo?: string;
+        dateFrom?: Date;
+        dateTo?: Date;
+        $or?: any[];
+    }) => Promise<number>;
+    create: (data: Partial<IServiceRequest>) => Promise<IServiceRequest>;
+    findById: (id: string, populate?: string | string[]) => Promise<IServiceRequest | null>;
+    findOne: (filter: FilterQuery<IServiceRequest>, populate?: string | string[]) => Promise<IServiceRequest | null>;
+    findAll: (filter?: FilterQuery<IServiceRequest> | undefined, options?: any) => Promise<IServiceRequest[]>;
+    updateById: (id: string, data: import("mongoose").UpdateQuery<IServiceRequest>, options?: import("mongoose").QueryOptions) => Promise<IServiceRequest | null>;
+    updateOne: (filter: FilterQuery<IServiceRequest>, data: import("mongoose").UpdateQuery<IServiceRequest>, options?: import("mongoose").QueryOptions) => Promise<IServiceRequest | null>;
+    deleteById: (id: string) => Promise<boolean>;
+    deleteOne: (filter: FilterQuery<IServiceRequest>) => Promise<boolean>;
+    count: (filter?: FilterQuery<IServiceRequest> | undefined) => Promise<number>;
+    exists: (filter: FilterQuery<IServiceRequest>) => Promise<boolean>;
+    aggregate: (pipeline: any[]) => Promise<any[]>;
+};
+//# sourceMappingURL=serviceRequest.dao.d.ts.map

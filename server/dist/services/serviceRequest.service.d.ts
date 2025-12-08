@@ -1,0 +1,56 @@
+import { IServiceRequest } from '../models/ServiceRequest.model';
+export declare const createServiceRequest: (userId: string, data: {
+    serviceType: string;
+    dateFrom: Date;
+    dateTo: Date;
+    duration: string;
+    typeOfService: string;
+    type: string;
+    category: string;
+    subcategory: string;
+    description: string;
+    priority: string;
+}) => Promise<IServiceRequest>;
+export declare const getServiceRequestById: (requestId: string, userId?: string, userRole?: string) => Promise<IServiceRequest | null>;
+export declare const getServiceRequestByRequestId: (requestId: string) => Promise<IServiceRequest | null>;
+export declare const getUserServiceRequests: (userId: string, filters?: any, skip?: number, limit?: number, sort?: any) => Promise<IServiceRequest[]>;
+export declare const countUserServiceRequests: (userId: string, filters?: any) => Promise<number>;
+export declare const getAssignedServiceRequests: (agentId: string, filters?: any, skip?: number, limit?: number, sort?: any) => Promise<IServiceRequest[]>;
+export declare const countAssignedServiceRequests: (agentId: string, filters?: any) => Promise<number>;
+export declare const getAllServiceRequests: (filters?: any, skip?: number, limit?: number, sort?: any) => Promise<IServiceRequest[]>;
+export declare const countAllServiceRequests: (filters?: any) => Promise<number>;
+export declare const updateServiceRequest: (requestId: string, updates: Partial<IServiceRequest>, userId: string, userRole?: string) => Promise<IServiceRequest | null>;
+export declare const approveServiceRequest: (requestId: string, approvedBy: string) => Promise<IServiceRequest | null>;
+export declare const rejectServiceRequest: (requestId: string, rejectedBy: string) => Promise<IServiceRequest | null>;
+export declare const addComment: (requestId: string, userId: string, text: string, userRole?: string) => Promise<IServiceRequest | null>;
+export declare const assignServiceRequest: (requestId: string, agentId: string, assignedBy: string) => Promise<IServiceRequest | null>;
+export declare const getServiceRequestStats: () => Promise<any>;
+export declare const serviceRequestService: {
+    createServiceRequest: (userId: string, data: {
+        serviceType: string;
+        dateFrom: Date;
+        dateTo: Date;
+        duration: string;
+        typeOfService: string;
+        type: string;
+        category: string;
+        subcategory: string;
+        description: string;
+        priority: string;
+    }) => Promise<IServiceRequest>;
+    getServiceRequestById: (requestId: string, userId?: string, userRole?: string) => Promise<IServiceRequest | null>;
+    getServiceRequestByRequestId: (requestId: string) => Promise<IServiceRequest | null>;
+    getUserServiceRequests: (userId: string, filters?: any, skip?: number, limit?: number, sort?: any) => Promise<IServiceRequest[]>;
+    countUserServiceRequests: (userId: string, filters?: any) => Promise<number>;
+    getAssignedServiceRequests: (agentId: string, filters?: any, skip?: number, limit?: number, sort?: any) => Promise<IServiceRequest[]>;
+    countAssignedServiceRequests: (agentId: string, filters?: any) => Promise<number>;
+    getAllServiceRequests: (filters?: any, skip?: number, limit?: number, sort?: any) => Promise<IServiceRequest[]>;
+    countAllServiceRequests: (filters?: any) => Promise<number>;
+    updateServiceRequest: (requestId: string, updates: Partial<IServiceRequest>, userId: string, userRole?: string) => Promise<IServiceRequest | null>;
+    approveServiceRequest: (requestId: string, approvedBy: string) => Promise<IServiceRequest | null>;
+    rejectServiceRequest: (requestId: string, rejectedBy: string) => Promise<IServiceRequest | null>;
+    addComment: (requestId: string, userId: string, text: string, userRole?: string) => Promise<IServiceRequest | null>;
+    assignServiceRequest: (requestId: string, agentId: string, assignedBy: string) => Promise<IServiceRequest | null>;
+    getServiceRequestStats: () => Promise<any>;
+};
+//# sourceMappingURL=serviceRequest.service.d.ts.map

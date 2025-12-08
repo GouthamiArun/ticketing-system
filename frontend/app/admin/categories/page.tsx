@@ -111,7 +111,7 @@ export default function AdminCategoriesPage() {
 
       const data = {
         name: formData.name,
-        type: formData.type,
+        type: formData.type as "Hardware" | "Software",
         subcategories: subcategoriesArray,
       };
 

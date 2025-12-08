@@ -315,6 +315,14 @@ export default function AgentTicketDetailPage() {
               />
               Refresh
             </Button>
+            <Button
+              onClick={() => setShowTimeline(true)}
+              variant="outline"
+              size="sm"
+            >
+              <History className="h-4 w-4 mr-2" />
+              Timeline
+            </Button>
           </div>
         </div>
 

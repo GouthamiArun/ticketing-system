@@ -15,7 +15,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+} from "@/components/ui/dialog";
 import { FilePreview } from "@/components/FilePreview";
 import { ticketService } from "@/services/ticketService";
 import { userService } from "@/services/userService";
@@ -170,7 +176,8 @@ export default function AdminTicketDetailPage() {
         } catch (error) {
           toast({
             title: "Warning",
-            description: "Failed to upload files, sending message without attachments",
+            description:
+              "Failed to upload files, sending message without attachments",
             variant: "destructive",
           });
         }
@@ -289,10 +296,18 @@ export default function AdminTicketDetailPage() {
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2 flex-wrap">
                 {ticket.ticketId}
-                <span className={`px-3 py-1 text-xs font-medium rounded-full border ${getStatusColor(ticket.status)}`}>
+                <span
+                  className={`px-3 py-1 text-xs font-medium rounded-full border ${getStatusColor(
+                    ticket.status
+                  )}`}
+                >
                   {ticket.status}
                 </span>
-                <span className={`px-3 py-1 text-xs font-medium rounded-full border ${getPriorityColor(ticket.priority)}`}>
+                <span
+                  className={`px-3 py-1 text-xs font-medium rounded-full border ${getPriorityColor(
+                    ticket.priority
+                  )}`}
+                >
                   {ticket.priority}
                 </span>
               </h1>
@@ -303,11 +318,22 @@ export default function AdminTicketDetailPage() {
           </div>
 
           <div className="flex gap-2 flex-wrap">
-            <Button onClick={() => loadTicket(true)} variant="outline" size="sm" disabled={refreshing}>
-              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
+            <Button
+              onClick={() => loadTicket(true)}
+              variant="outline"
+              size="sm"
+              disabled={refreshing}
+            >
+              <RefreshCw
+                className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`}
+              />
               Refresh
             </Button>
-            <Button onClick={() => setShowTimeline(true)} variant="outline" size="sm">
+            <Button
+              onClick={() => setShowTimeline(true)}
+              variant="outline"
+              size="sm"
+            >
               <History className="h-4 w-4 mr-2" />
               Timeline
             </Button>
@@ -320,9 +346,15 @@ export default function AdminTicketDetailPage() {
             {/* Ticket Description */}
             <Card>
               <CardContent className="pt-6">
-                <p className="text-sm font-semibold text-gray-700 mb-2">Original Request:</p>
-                <p className="text-sm text-gray-900 whitespace-pre-wrap">{ticket.description}</p>
-                <p className="text-xs text-gray-500 mt-3">Created on {formatDateTime(ticket.createdAt)}</p>
+                <p className="text-sm font-semibold text-gray-700 mb-2">
+                  Original Request:
+                </p>
+                <p className="text-sm text-gray-900 whitespace-pre-wrap">
+                  {ticket.description}
+                </p>
+                <p className="text-xs text-gray-500 mt-3">
+                  Created on {formatDateTime(ticket.createdAt)}
+                </p>
               </CardContent>
             </Card>
 
@@ -337,35 +369,80 @@ export default function AdminTicketDetailPage() {
                 <div className="h-[400px] overflow-y-auto p-4 space-y-4 bg-gray-50">
                   {ticket.comments && ticket.comments.length > 0 ? (
                     ticket.comments.map((comment: any, index: number) => {
-                      const isEmployee = comment.user?.role?.toLowerCase() === "employee";
+                      const isEmployee =
+                        comment.user?.role?.toLowerCase() === "employee";
                       return (
-                        <div key={index} className={`flex ${isEmployee ? "justify-start" : "justify-end"}`}>
+                        <div
+                          key={index}
+                          className={`flex ${
+                            isEmployee ? "justify-start" : "justify-end"
+                          }`}
+                        >
                           <div className="max-w-[75%]">
-                            <div className={`flex items-center gap-2 mb-1 ${isEmployee ? "justify-start" : "justify-end"}`}>
-                              <span className="text-xs font-medium text-gray-700">{comment.user?.name || "Unknown"}</span>
-                              <span className="text-xs text-gray-500">{formatDateTime(comment.createdAt)}</span>
+                            <div
+                              className={`flex items-center gap-2 mb-1 ${
+                                isEmployee ? "justify-start" : "justify-end"
+                              }`}
+                            >
+                              <span className="text-xs font-medium text-gray-700">
+                                {comment.user?.name || "Unknown"}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {formatDateTime(comment.createdAt)}
+                              </span>
                             </div>
-                            <div className={`p-3 rounded-lg ${isEmployee ? "bg-white text-gray-900 border border-gray-200" : "bg-blue-600 text-white"}`}>
-                              <p className="text-sm whitespace-pre-wrap">{comment.text}</p>
-                              {comment.attachments && comment.attachments.length > 0 && (
-                                <div className="mt-2 space-y-1">
-                                  {comment.attachments.map((att: string, i: number) => {
-                                    const fileName = getFileName(att);
-                                    return (
-                                      <div key={i} className={`flex items-center gap-2 text-xs ${isEmployee ? "text-blue-600" : "text-blue-100"}`}>
-                                        <File className="h-3 w-3" />
-                                        <span className="max-w-[150px] truncate">{fileName}</span>
-                                        <button onClick={() => setPreviewFile(att)} className="hover:underline" title="Preview">
-                                          <Eye className="h-3 w-3" />
-                                        </button>
-                                        <a href={getFileUrl(att)} download className="hover:underline" title="Download">
-                                          <Download className="h-3 w-3" />
-                                        </a>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              )}
+                            <div
+                              className={`p-3 rounded-lg ${
+                                isEmployee
+                                  ? "bg-white text-gray-900 border border-gray-200"
+                                  : "bg-blue-600 text-white"
+                              }`}
+                            >
+                              <p className="text-sm whitespace-pre-wrap">
+                                {comment.text}
+                              </p>
+                              {comment.attachments &&
+                                comment.attachments.length > 0 && (
+                                  <div className="mt-2 space-y-1">
+                                    {comment.attachments.map(
+                                      (att: string, i: number) => {
+                                        const fileName = getFileName(att);
+                                        return (
+                                          <div
+                                            key={i}
+                                            className={`flex items-center gap-2 text-xs ${
+                                              isEmployee
+                                                ? "text-blue-600"
+                                                : "text-blue-100"
+                                            }`}
+                                          >
+                                            <File className="h-3 w-3" />
+                                            <span className="max-w-[150px] truncate">
+                                              {fileName}
+                                            </span>
+                                            <button
+                                              onClick={() =>
+                                                setPreviewFile(att)
+                                              }
+                                              className="hover:underline"
+                                              title="Preview"
+                                            >
+                                              <Eye className="h-3 w-3" />
+                                            </button>
+                                            <a
+                                              href={getFileUrl(att)}
+                                              download
+                                              className="hover:underline"
+                                              title="Download"
+                                            >
+                                              <Download className="h-3 w-3" />
+                                            </a>
+                                          </div>
+                                        );
+                                      }
+                                    )}
+                                  </div>
+                                )}
                             </div>
                           </div>
                         </div>
@@ -385,10 +462,18 @@ export default function AdminTicketDetailPage() {
                     {attachments.length > 0 && (
                       <div className="mb-3 flex flex-wrap gap-2">
                         {attachments.map((file, index) => (
-                          <div key={index} className="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded text-sm">
+                          <div
+                            key={index}
+                            className="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded text-sm"
+                          >
                             <File className="h-4 w-4 text-gray-600" />
-                            <span className="text-gray-700 max-w-[200px] truncate">{file.name}</span>
-                            <button onClick={() => removeAttachment(index)} className="text-gray-500 hover:text-red-600">
+                            <span className="text-gray-700 max-w-[200px] truncate">
+                              {file.name}
+                            </span>
+                            <button
+                              onClick={() => removeAttachment(index)}
+                              className="text-gray-500 hover:text-red-600"
+                            >
                               <X className="h-4 w-4" />
                             </button>
                           </div>
@@ -397,8 +482,23 @@ export default function AdminTicketDetailPage() {
                     )}
                     <div className="flex gap-2">
                       <div className="relative">
-                        <Input type="file" multiple onChange={handleFileSelect} className="hidden" id="file-upload" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" />
-                        <Button type="button" variant="outline" size="sm" onClick={() => document.getElementById("file-upload")?.click()} disabled={submitting}>
+                        <Input
+                          type="file"
+                          multiple
+                          onChange={handleFileSelect}
+                          className="hidden"
+                          id="file-upload"
+                          accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            document.getElementById("file-upload")?.click()
+                          }
+                          disabled={submitting}
+                        >
                           <Paperclip className="h-4 w-4" />
                         </Button>
                       </div>
@@ -418,14 +518,24 @@ export default function AdminTicketDetailPage() {
                       />
                       <Button
                         onClick={handleSendMessage}
-                        disabled={submitting || uploadingFiles || (!message.trim() && attachments.length === 0)}
+                        disabled={
+                          submitting ||
+                          uploadingFiles ||
+                          (!message.trim() && attachments.length === 0)
+                        }
                         className="bg-blue-600 hover:bg-blue-700"
                       >
                         <Send className="h-4 w-4 mr-2" />
-                        {submitting ? "Sending..." : uploadingFiles ? "Uploading..." : "Send"}
+                        {submitting
+                          ? "Sending..."
+                          : uploadingFiles
+                          ? "Uploading..."
+                          : "Send"}
                       </Button>
                     </div>
-                    <p className="text-xs text-gray-500 mt-2">Press Enter to send, Shift + Enter for new line</p>
+                    <p className="text-xs text-gray-500 mt-2">
+                      Press Enter to send, Shift + Enter for new line
+                    </p>
                   </div>
                 )}
               </CardContent>
@@ -443,20 +553,28 @@ export default function AdminTicketDetailPage() {
                 </h3>
                 {ticket.assignedTo ? (
                   <div>
-                    <p className="text-xs text-gray-600 mb-2">Currently Assigned To:</p>
+                    <p className="text-xs text-gray-600 mb-2">
+                      Currently Assigned To:
+                    </p>
                     <div className="flex items-center gap-3 p-3 bg-gray-50 rounded border border-gray-200">
                       <div className="w-10 h-10 bg-blue-100 flex items-center justify-center rounded-full">
                         <User className="h-5 w-5 text-blue-600" />
                       </div>
                       <div className="flex-1">
-                        <p className="font-semibold text-sm text-gray-900">{ticket.assignedTo.name}</p>
-                        <p className="text-xs text-gray-600">{ticket.assignedTo.email}</p>
+                        <p className="font-semibold text-sm text-gray-900">
+                          {ticket.assignedTo.name}
+                        </p>
+                        <p className="text-xs text-gray-600">
+                          {ticket.assignedTo.email}
+                        </p>
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div className="p-3 bg-orange-50 border border-orange-200 rounded">
-                    <p className="text-sm text-orange-700">This ticket is not assigned yet</p>
+                    <p className="text-sm text-orange-700">
+                      This ticket is not assigned yet
+                    </p>
                   </div>
                 )}
 
@@ -464,7 +582,10 @@ export default function AdminTicketDetailPage() {
                   <label className="text-xs text-gray-600 mb-2 block">
                     {ticket.assignedTo ? "Reassign to:" : "Assign to:"}
                   </label>
-                  <Select onValueChange={handleAssignAgent} disabled={assigning}>
+                  <Select
+                    onValueChange={handleAssignAgent}
+                    disabled={assigning}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select an agent" />
                     </SelectTrigger>
@@ -483,9 +604,13 @@ export default function AdminTicketDetailPage() {
             {/* Status Management */}
             <Card>
               <CardContent className="pt-6 space-y-3">
-                <h3 className="font-semibold text-gray-900 mb-2">Status Management</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">
+                  Status Management
+                </h3>
                 <div>
-                  <label className="text-xs text-gray-600 mb-2 block">Update Status:</label>
+                  <label className="text-xs text-gray-600 mb-2 block">
+                    Update Status:
+                  </label>
                   <Select
                     value={ticket.status}
                     onValueChange={handleStatusUpdate}
@@ -520,7 +645,9 @@ export default function AdminTicketDetailPage() {
                   <Tag className="h-5 w-5 text-gray-400 mt-0.5" />
                   <div className="flex-1">
                     <p className="text-xs text-gray-600">Priority</p>
-                    <p className="font-medium text-gray-900">{ticket.priority}</p>
+                    <p className="font-medium text-gray-900">
+                      {ticket.priority}
+                    </p>
                   </div>
                 </div>
 
@@ -528,7 +655,9 @@ export default function AdminTicketDetailPage() {
                   <User className="h-5 w-5 text-gray-400 mt-0.5" />
                   <div className="flex-1">
                     <p className="text-xs text-gray-600">Created By</p>
-                    <p className="font-medium text-gray-900">{ticket.createdBy?.name || "Unknown"}</p>
+                    <p className="font-medium text-gray-900">
+                      {ticket.createdBy?.name || "Unknown"}
+                    </p>
                   </div>
                 </div>
 
@@ -536,7 +665,9 @@ export default function AdminTicketDetailPage() {
                   <Calendar className="h-5 w-5 text-gray-400 mt-0.5" />
                   <div className="flex-1">
                     <p className="text-xs text-gray-600">Created</p>
-                    <p className="font-medium text-gray-900 text-sm">{formatDateTime(ticket.createdAt)}</p>
+                    <p className="font-medium text-gray-900 text-sm">
+                      {formatDateTime(ticket.createdAt)}
+                    </p>
                   </div>
                 </div>
 
@@ -544,7 +675,9 @@ export default function AdminTicketDetailPage() {
                   <Clock className="h-5 w-5 text-gray-400 mt-0.5" />
                   <div className="flex-1">
                     <p className="text-xs text-gray-600">Last Updated</p>
-                    <p className="font-medium text-gray-900 text-sm">{formatDateTime(ticket.updatedAt)}</p>
+                    <p className="font-medium text-gray-900 text-sm">
+                      {formatDateTime(ticket.updatedAt)}
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -566,19 +699,36 @@ export default function AdminTicketDetailPage() {
             {ticket.timeline && ticket.timeline.length > 0 ? (
               <div className="space-y-4">
                 {ticket.timeline.map((event: any, index: number) => (
-                  <div key={index} className="flex gap-3 pb-4 border-b border-gray-100 last:border-0">
+                  <div
+                    key={index}
+                    className="flex gap-3 pb-4 border-b border-gray-100 last:border-0"
+                  >
                     <div className="flex-shrink-0 mt-1">
                       <div className="w-2.5 h-2.5 bg-blue-600 rounded-full"></div>
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">{event.details}</p>
-                      <p className="text-xs text-gray-600 mt-1">{event.performedByName}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">{event.timestamp}</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {event.details}
+                      </p>
+                      <p className="text-xs text-gray-600 mt-1">
+                        {event.performedByName}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        {event.timestamp}
+                      </p>
                       {(event.oldValue || event.newValue) && (
                         <p className="text-xs text-gray-500 mt-1">
-                          {event.oldValue && <span className="line-through">{event.oldValue}</span>}
+                          {event.oldValue && (
+                            <span className="line-through">
+                              {event.oldValue}
+                            </span>
+                          )}
                           {event.oldValue && event.newValue && " → "}
-                          {event.newValue && <span className="font-medium text-gray-700">{event.newValue}</span>}
+                          {event.newValue && (
+                            <span className="font-medium text-gray-700">
+                              {event.newValue}
+                            </span>
+                          )}
                         </p>
                       )}
                     </div>
@@ -586,14 +736,18 @@ export default function AdminTicketDetailPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-center text-gray-500 py-8">No timeline events</p>
+              <p className="text-center text-gray-500 py-8">
+                No timeline events
+              </p>
             )}
           </DialogBody>
         </DialogContent>
       </Dialog>
 
       {/* File Preview Modal */}
-      {previewFile && <FilePreview url={previewFile} onClose={() => setPreviewFile(null)} />}
+      {previewFile && (
+        <FilePreview url={previewFile} onClose={() => setPreviewFile(null)} />
+      )}
     </DashboardLayout>
   );
 }

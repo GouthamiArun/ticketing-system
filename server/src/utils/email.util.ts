@@ -44,7 +44,7 @@ export const sendTicketCreatedEmail = async (ticket: ITicket, user: IUser): Prom
     <br>
     <p>Best regards,<br>IT Support Team</p>
   `;
-  await sendEmail("panditmukki5@gmail.com", subject, html);
+  await sendEmail(user.email, subject, html);
 };
 
 export const sendServiceRequestCreatedEmail = async (

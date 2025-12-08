@@ -22,6 +22,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 interface MenuItem {
   label: string;
@@ -202,7 +203,7 @@ export default function Sidebar({
           }`}
         >
           <div className="w-10 h-10 bg-blue-600 flex items-center justify-center flex-shrink-0">
-            <Ticket className="h-6 w-6 text-white" />
+            <Image src="/logo.png" alt="Logo" width={60} height={60} />
           </div>
           {!isCollapsed && (
             <h1 className="text-xl font-bold text-gray-900">IT Support</h1>

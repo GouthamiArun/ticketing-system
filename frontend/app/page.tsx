@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { TicketIcon, Wrench, Users, BarChart3 } from "lucide-react";
+import Image from "next/image";
 
 export default function HomePage() {
   return (
@@ -18,7 +19,7 @@ export default function HomePage() {
         <header className="border-b border-gray-200 bg-white">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <TicketIcon className="h-8 w-8 text-blue-600" />
+              <Image src="/logo.png" alt="Logo" width={60} height={60} />
               <h1 className="text-2xl font-bold text-gray-900">IT Support</h1>
             </div>
             <div className="flex gap-3">
@@ -134,7 +135,7 @@ export default function HomePage() {
         <footer className="bg-gray-900 text-white py-8">
           <div className="container mx-auto px-4 text-center">
             <p className="text-gray-400">
-              © 2024 IT Ticketing System. All rights reserved.
+              ©2025 IT Ticketing System. All rights reserved.
             </p>
           </div>
         </footer>

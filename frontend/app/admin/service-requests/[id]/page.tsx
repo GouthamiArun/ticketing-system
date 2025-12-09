@@ -148,7 +148,9 @@ export default function AdminServiceRequestDetailPage() {
   const handleStatusUpdate = async (newStatus: string) => {
     try {
       setUpdatingStatus(true);
-      await serviceRequestService.updateServiceRequest(requestId, { status: newStatus as any });
+      await serviceRequestService.updateServiceRequest(requestId, {
+        status: newStatus as any,
+      });
       toast({
         title: "Success",
         description: `Status updated to ${newStatus}`,
@@ -251,10 +253,18 @@ export default function AdminServiceRequestDetailPage() {
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2 flex-wrap">
                 {request.requestId}
-                <span className={`px-3 py-1 text-xs font-medium rounded-full border ${getStatusColor(request.status)}`}>
+                <span
+                  className={`px-3 py-1 text-xs font-medium rounded-full border ${getStatusColor(
+                    request.status
+                  )}`}
+                >
                   {request.status}
                 </span>
-                <span className={`px-3 py-1 text-xs font-medium rounded-full border ${getPriorityColor(request.priority)}`}>
+                <span
+                  className={`px-3 py-1 text-xs font-medium rounded-full border ${getPriorityColor(
+                    request.priority
+                  )}`}
+                >
                   {request.priority}
                 </span>
               </h1>
@@ -269,7 +279,9 @@ export default function AdminServiceRequestDetailPage() {
             onClick={() => loadRequest(true)}
             disabled={refreshing}
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`}
+            />
             Refresh
           </Button>
         </div>
@@ -304,7 +316,9 @@ export default function AdminServiceRequestDetailPage() {
                           <CalendarRange className="h-4 w-4" />
                           Date From
                         </h3>
-                        <p className="text-gray-900">{formatDate(request.dateFrom)}</p>
+                        <p className="text-gray-900">
+                          {formatDate(request.dateFrom)}
+                        </p>
                       </div>
                     )}
                     {request.dateTo && (
@@ -313,7 +327,9 @@ export default function AdminServiceRequestDetailPage() {
                           <CalendarRange className="h-4 w-4" />
                           Date To
                         </h3>
-                        <p className="text-gray-900">{formatDate(request.dateTo)}</p>
+                        <p className="text-gray-900">
+                          {formatDate(request.dateTo)}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -355,13 +371,13 @@ export default function AdminServiceRequestDetailPage() {
                       return (
                         <div
                           key={index}
-                          className={`flex ${isEmp ? "justify-start" : "justify-end"}`}
+                          className={`flex ${
+                            isEmp ? "justify-start" : "justify-end"
+                          }`}
                         >
                           <div
                             className={`max-w-[70%] ${
-                              isEmp
-                                ? "bg-gray-100"
-                                : "bg-blue-600 text-white"
+                              isEmp ? "bg-gray-100" : "bg-blue-600 text-white"
                             } rounded-lg p-3`}
                           >
                             <div className="flex items-center gap-2 mb-1">
@@ -371,9 +387,7 @@ export default function AdminServiceRequestDetailPage() {
                               </span>
                               <span
                                 className={`text-xs ${
-                                  isEmp
-                                    ? "text-gray-500"
-                                    : "text-blue-100"
+                                  isEmp ? "text-gray-500" : "text-blue-100"
                                 }`}
                               >
                                 {formatTime(comment.createdAt)}
@@ -446,7 +460,10 @@ export default function AdminServiceRequestDetailPage() {
                       </p>
                     </div>
                   )}
-                  <Select onValueChange={handleAssignAgent} disabled={assigning}>
+                  <Select
+                    onValueChange={handleAssignAgent}
+                    disabled={assigning}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Assign to agent" />
                     </SelectTrigger>

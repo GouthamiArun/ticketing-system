@@ -30,10 +30,7 @@ app.use(
 
 // CORS configuration
 app.use(
-  cors({
-    origin: '*',
-    credentials: true,
-  })
+  cors()
 );
 
 // Request logging

@@ -14,15 +14,18 @@ export const authenticate = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const token = req.cookies.token;
-
-    if (!token) {
+    // Get token from Authorization header
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       res.status(401).json({
         success: false,
         message: 'Authentication required',
       });
       return;
     }
+
+    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
 
     const decoded = authService.verifyToken(token);
     

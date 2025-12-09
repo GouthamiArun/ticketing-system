@@ -11,13 +11,6 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     
     const { user, token } = await authService.signup(validatedData);
 
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      sameSite: 'lax',
-    });
-
     res.status(201).json(successResponse('Signup successful', {
       user: {
         id: user._id,
@@ -26,6 +19,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
         role: user.role,
         department: user.department,
       },
+      token,
     }));
   } catch (error) {
     if (error instanceof ZodError) {
@@ -47,13 +41,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       validatedData.password
     );
 
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: 'lax',
-    });
-
     res.status(200).json(successResponse('Login successful', {
       user: {
         id: user._id,
@@ -62,6 +49,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         role: user.role,
         department: user.department,
       },
+      token,
     }));
   } catch (error) {
     if (error instanceof ZodError) {
@@ -75,7 +63,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const logout = async (req: Request, res: Response): Promise<void> => {
-  res.clearCookie('token');
   res.status(200).json(successResponse('Logout successful'));
 };
 

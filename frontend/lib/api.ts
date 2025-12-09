@@ -6,6 +6,26 @@ interface FetchOptions extends RequestInit {
   data?: any;
 }
 
+// Token management
+export const tokenManager = {
+  getToken: () => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('token');
+    }
+    return null;
+  },
+  setToken: (token: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('token', token);
+    }
+  },
+  removeToken: () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token');
+    }
+  },
+};
+
 async function fetchAPI<T = any>(
   endpoint: string,
   options: FetchOptions = {}
@@ -14,20 +34,24 @@ async function fetchAPI<T = any>(
 
   const config: RequestInit = {
     ...fetchOptions,
-    credentials: 'include',
   };
+
+  // Get token from localStorage
+  const token = tokenManager.getToken();
 
   // Handle FormData separately (for file uploads)
   if (data instanceof FormData) {
     config.body = data;
     // Don't set Content-Type for FormData - browser will set it with boundary
     config.headers = {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...fetchOptions.headers,
     };
   } else {
     // Regular JSON data
     config.headers = {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...fetchOptions.headers,
     };
     if (data) {

@@ -30,7 +30,10 @@ app.use(
 
 // CORS configuration
 app.use(
-  cors()
+  cors({
+    origin: process.env.CLIENT_URL || 'https://ticketing-system-eta-eight.vercel.app',
+    credentials: true,
+  })
 );
 
 // Request logging
